@@ -54,3 +54,10 @@ gem 'active_model_serializers'
 
 # Devise gems
 gem 'devise'
+
+# Sabisu gems
+# gem 'sabisu_rails'
+# gem 'compass-rails'
+# gem 'furatto'
+# gem 'font-awesome-rails'
+# gem 'simple_form'
