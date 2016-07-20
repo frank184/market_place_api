@@ -48,5 +48,8 @@ group :test do
   gem 'faker'
 end
 
-#Api gems
+# Api gems
 gem 'active_model_serializers'
+
+# Devise gems
+gem 'devise'
