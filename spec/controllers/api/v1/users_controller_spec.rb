@@ -5,7 +5,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
   describe "GET #show" do
     before(:each) do
-      @user = FactoryGirl.create(:user)
+      @user = create(:user)
       get :show, id: @user.id, format: :json
     end
 
@@ -19,13 +19,12 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
   describe "POST #create" do
     context "when created" do
-
       before(:each) do
-        @user_attributes = FactoryGirl.attributes_for :user
+        @user_attributes = attributes_for :user
         post :create, { user: @user_attributes }, format: :json
       end
 
-      it "should return the user created as JSON" do
+      it "should render the user created as JSON" do
         user_response = JSON.parse(response.body, symbolize_names: true)
         expect(user_response[:email]).to eql @user_attributes[:email]
       end
@@ -35,11 +34,11 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
     context "when not created" do
       before(:each) do
-        @invalid_attributes = FactoryGirl.attributes_for :user, email: nil
+        @invalid_attributes = attributes_for :user, email: nil
         post :create, { user: @invalid_attributes }, format: :json
       end
 
-      it "should render an errors json" do
+      it "should render the errors json" do
         user_response = JSON.parse(response.body, symbolize_names: true)
         expect(user_response).to have_key(:errors)
       end
@@ -47,6 +46,41 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       it "should explain why the user could not be created" do
         user_response = JSON.parse(response.body, symbolize_names: true)
         expect(user_response[:errors][:email]).to include "can't be blank"
+      end
+
+      it { is_expected.to respond_with 422 }
+    end
+  end
+
+  describe "PUT/PATCH #update" do
+    context "when updated" do
+      before(:each) do
+        @user = create :user
+        patch :update, { id: @user.id, user: {email: 'new@mail.com'} }, format: :json
+      end
+
+      it "should render the updated user as JSON" do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response[:email]).to eql 'new@mail.com'
+      end
+
+      it { is_expected.to respond_with 200 }
+    end
+
+    context "when not updated" do
+      before(:each) do
+        @user = create :user
+        patch :update, { id: @user.id, user: {email: 'bad'} }, format: :json
+      end
+
+      it "should render the errors json" do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response).to have_key(:errors)
+      end
+
+      it "should explain why the user could not be created" do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response[:errors][:email]).to include "is invalid"
       end
 
       it { is_expected.to respond_with 422 }
