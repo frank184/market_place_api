@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
   before(:each) { include_default_accept_headers }
-  
+
   describe "GET #show" do
     before(:each) do
       @user = create(:user)
@@ -56,6 +56,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "when updated" do
       before(:each) do
         @user = create :user
+        api_authorization_header @user.token
         patch :update, { id: @user.id, user: {email: 'new@mail.com'} }
       end
 
@@ -70,6 +71,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "when not updated" do
       before(:each) do
         @user = create :user
+        request.headers['Authorization'] = @user.token
         patch :update, { id: @user.id, user: {email: 'bad'} }
       end
 
@@ -90,6 +92,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "DELETE #destroy" do
     before(:each) do
       @user = create :user
+      api_authorization_header @user.token
       delete :destroy, { id: @user.id }
     end
 
