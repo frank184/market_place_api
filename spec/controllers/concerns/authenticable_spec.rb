@@ -16,6 +16,7 @@ describe Authenticable do
       request.headers["Authorization"] = @user.token
       allow(authentication).to receive(:request).and_return(request)
     end
+
     it "returns the user from the authorization header" do
       expect(authentication.current_user.token).to eql @user.token
     end
@@ -35,6 +36,26 @@ describe Authenticable do
     end
 
     it { is_expected.to respond_with 401 }
+  end
+
+  describe "#user_signed_in?" do
+    context "when there is a user on 'session'" do
+      before do
+        @user = create :user
+        allow(authentication).to receive(:current_user).and_return(@user)
+      end
+
+      it { is_expected.to be_user_signed_in }
+    end
+
+    context "when there is no user on 'session'" do
+      before do
+        @user = create :user
+        allow(authentication).to receive(:current_user).and_return(nil)
+      end
+
+      it { is_expected.to_not be_user_signed_in }
+    end
   end
 
 end
