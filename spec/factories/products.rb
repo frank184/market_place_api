@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :product do
-    title "MyString"
-    price "9.99"
+    title { Faker::Commerce.product_name }
+    price { Faker::Commerce.price }
     published false
   end
 end
