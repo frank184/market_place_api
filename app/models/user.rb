@@ -6,5 +6,5 @@ class User < ActiveRecord::Base
   has_secure_token
 
   validates_uniqueness_of :token
-  has_many :products
+  has_many :products, dependent: :destroy
 end

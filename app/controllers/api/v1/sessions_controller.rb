@@ -1,4 +1,5 @@
 class Api::V1::SessionsController < ApplicationController
+  respond_to :json
 
   def create
     email = params[:session][:email]
