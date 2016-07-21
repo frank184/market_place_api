@@ -42,5 +42,22 @@ group :development do
   gem 'spring'
 end
 
-#Api gems
+group :test do
+  gem 'rspec-rails'
+  gem 'factory_girl_rails'
+  gem 'faker'
+  gem 'shoulda-matchers'
+end
+
+# Api gems
 gem 'active_model_serializers'
+
+# Devise gems
+gem 'devise'
+
+# Sabisu gems
+# gem 'sabisu_rails'
+# gem 'compass-rails'
+# gem 'furatto'
+# gem 'font-awesome-rails'
+# gem 'simple_form'
