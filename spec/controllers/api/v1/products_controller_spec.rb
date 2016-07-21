@@ -33,4 +33,43 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
     it { is_expected.to respond_with 200 }
   end
 
+  describe "POST #create" do
+    before(:each) do
+      @user = create(:user)
+      api_authorization_header @user.token
+    end
+    context "when valid attributes" do
+      before(:each) do
+        @valid_attributes = attributes_for :product
+        post :create, { product: @valid_attributes }
+      end
+
+      it "should return the created product as JSON" do
+        product_response = json_response
+        expect(product_response[:title]).to eql @valid_attributes[:title]
+      end
+
+      it { is_expected.to respond_with 201 }
+    end
+
+    context "when invalid attributes" do
+      before(:each) do
+        @invalid_attributes = attributes_for :product, title: ""
+        post :create, { product: @invalid_attributes }
+      end
+
+      it "should return an errors JSON" do
+        product_response = json_response
+        expect(product_response).to have_key(:errors)
+      end
+
+      it "should explain what went wrong" do
+        product_response = json_response
+        expect(product_response[:errors]).to include title: ["can't be blank"]
+      end
+
+      it { is_expected.to respond_with 422 }
+    end
+  end
+
 end
