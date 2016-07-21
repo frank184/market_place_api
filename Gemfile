@@ -32,6 +32,10 @@ group :development, :test do
   gem 'byebug'
   # Use sqlite3 as the database for Active Record
   gem 'sqlite3'
+  # FactoryGirl
+  gem 'factory_girl_rails'
+  # Faker
+  gem 'faker'
 end
 
 group :development do
@@ -44,8 +48,7 @@ end
 
 group :test do
   gem 'rspec-rails'
-  gem 'factory_girl_rails'
-  gem 'faker'
+  gem 'rspec-collection_matchers'
   gem 'shoulda-matchers'
 end
 
