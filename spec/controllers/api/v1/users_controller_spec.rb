@@ -1,12 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
-  before(:each) { request.headers['Accept'] = 'application/vnd.marketplace.v1' }
+  before(:each) { request.headers['Accept'] = "application/vnd.marketplace.v1, #{Mime::JSON}" }
+  before(:each) { request.headers['Content-Type'] = Mime::JSON }
 
   describe "GET #show" do
     before(:each) do
       @user = create(:user)
-      get :show, id: @user.id, format: :json
+      get :show, id: @user.id
     end
 
     it "should return the user as JSON" do
@@ -21,7 +22,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "when created" do
       before(:each) do
         @user_attributes = attributes_for :user
-        post :create, { user: @user_attributes }, format: :json
+        post :create, { user: @user_attributes }
       end
 
       it "should render the user created as JSON" do
@@ -35,7 +36,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "when not created" do
       before(:each) do
         @invalid_attributes = attributes_for :user, email: nil
-        post :create, { user: @invalid_attributes }, format: :json
+        post :create, { user: @invalid_attributes }
       end
 
       it "should render the errors json" do
@@ -56,7 +57,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "when updated" do
       before(:each) do
         @user = create :user
-        patch :update, { id: @user.id, user: {email: 'new@mail.com'} }, format: :json
+        patch :update, { id: @user.id, user: {email: 'new@mail.com'} }
       end
 
       it "should render the updated user as JSON" do
@@ -70,7 +71,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
     context "when not updated" do
       before(:each) do
         @user = create :user
-        patch :update, { id: @user.id, user: {email: 'bad'} }, format: :json
+        patch :update, { id: @user.id, user: {email: 'bad'} }
       end
 
       it "should render the errors json" do
@@ -90,7 +91,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
   describe "DELETE #destroy" do
     before(:each) do
       @user = create :user
-      delete :destroy, { id: @user.id }, format: :json
+      delete :destroy, { id: @user.id }
     end
 
     it { is_expected.to respond_with 204 }
