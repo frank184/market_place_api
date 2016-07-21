@@ -111,4 +111,15 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
     end
   end
 
+  describe "DELETE #destroy" do
+    before(:each) do
+      @user = create :user
+      api_authorization_header @user.token
+      @product = create :product, user: @user
+      delete :destroy, { user_id: @user.id, id: @product.id }
+    end
+
+    it { is_expected.to respond_with 204 }
+  end
+
 end
