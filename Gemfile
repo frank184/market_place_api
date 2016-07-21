@@ -61,3 +61,5 @@ gem 'devise'
 # gem 'furatto'
 # gem 'font-awesome-rails'
 # gem 'simple_form'
+
+gem 'has_secure_token'
