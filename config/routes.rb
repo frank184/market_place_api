@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace :api, defaults: { format: :json }, constraints: { subdomain: 'api' }, path: '/' do
     scope :v1, constraints: ApiConstraints.new(version: 1, default: true) do
       resources :users, only: [:show, :create, :update, :destroy], controller: 'v1/users'
+      resources :sessions, only: [:create, :destroy], controller: 'v1/sessions'
     end
   end
 end
