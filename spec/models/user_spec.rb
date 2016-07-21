@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  before(:each) { @user = FactoryGirl.build(:user, email: 'user@mail.com', token: 'token') }
+  before(:each) { @user = build(:user, email: 'user@mail.com', token: 'token') }
   subject { @user }
 
   describe "db" do
