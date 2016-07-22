@@ -9,6 +9,11 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe "associations" do
+    it { is_expected.to have_many(:line_items) }
+    it { is_expected.to have_many(:products).through(:line_items) }
+  end
+
   describe "attributes" do
     let(:user) { create :user }
     subject { build :order, total: 10.0, user: user }

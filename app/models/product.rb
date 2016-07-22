@@ -1,5 +1,8 @@
 class Product < ActiveRecord::Base
   belongs_to :user
+  
+  has_many :line_items
+  has_many :orders, through: :line_items
 
   validates_presence_of :title, :price, :user
   validates_numericality_of :price, greater_than_or_equal_to: 0
