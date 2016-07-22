@@ -3,7 +3,7 @@ class Api::V1::ProductsController < ApplicationController
   respond_to :json
 
   def index
-    render json: { products: Product.all}
+    respond_with Product.all
   end
 
   def show
@@ -13,7 +13,7 @@ class Api::V1::ProductsController < ApplicationController
   def create
     product = current_user.products.build(permitted_product_params)
     if product.save
-      render json: product, status: 201, location: [:api, product]
+      respond_with product, status: 201, location: [:api, product]
     else
       render json: { errors: product.errors }, status: 422
     end
@@ -22,6 +22,8 @@ class Api::V1::ProductsController < ApplicationController
   def update
     product = current_user.products.find(params[:id])
     if product.update(permitted_product_params)
+      # Default is to 204 - No Content
+      # respond_wit product, status: 200, location: [:api, product]
       render json: product, status: 200, location: [:api, product]
     else
       render json: { errors: product.errors }, status: 422

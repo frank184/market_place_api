@@ -27,7 +27,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
     it "should return a products JSON" do
       product_response = json_response
-      expect(product_response[:title]).to eql @product.title
+      expect(product_response[:product][:title]).to eql @product.title
     end
 
     it { is_expected.to respond_with 200 }
@@ -46,7 +46,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
       it "should return the created product as JSON" do
         product_response = json_response
-        expect(product_response[:title]).to eql @valid_attributes[:title]
+        expect(product_response[:product][:title]).to eql @valid_attributes[:title]
       end
 
       it { is_expected.to respond_with 201 }
@@ -86,7 +86,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
       it "should return the updated product as JSON" do
         product_response = json_response
-        expect(product_response[:title]).to eql "New Title"
+        expect(product_response[:product][:title]).to eql "New Title"
       end
 
       it { is_expected.to respond_with 200 }
