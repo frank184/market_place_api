@@ -10,6 +10,7 @@ RSpec.describe Order, type: :model do
   end
 
   describe "associations" do
+    it { is_expected.to belong_to(:user) }
     it { is_expected.to have_many(:line_items) }
     it { is_expected.to have_many(:products).through(:line_items) }
   end
