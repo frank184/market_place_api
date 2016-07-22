@@ -16,6 +16,13 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
       expect(products_response[:products]).to have(@n).items
     end
 
+    it "should embed the user in each product" do
+      products_response = json_response
+      products_response[:products].each do |product|
+        expect(product[:user]).to be_present
+      end
+    end
+
     it { is_expected.to respond_with 200 }
   end
 
@@ -28,6 +35,11 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
     it "should return a products JSON" do
       product_response = json_response
       expect(product_response[:product][:title]).to eql @product.title
+    end
+
+    it "should embed the user in the product" do
+      product_response = json_response
+      expect(product_response[:product])
     end
 
     it { is_expected.to respond_with 200 }
