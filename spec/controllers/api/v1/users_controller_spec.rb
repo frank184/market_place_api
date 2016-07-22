@@ -5,13 +5,18 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
   describe "GET #show" do
     before(:each) do
-      @user = create(:user)
+      @user = create :user
       get :show, id: @user.id
     end
 
     it "should return the user as JSON" do
       user_response = json_response
-      expect(user_response[:email]).to eql @user.email
+      expect(user_response[:user][:email]).to eql @user.email
+    end
+
+    it "should have product_ids" do
+      user_response = json_response
+      expect(user_response[:user][:product_ids]).to eql []
     end
 
     it { is_expected.to respond_with 200 }
@@ -26,7 +31,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
       it "should render the user created as JSON" do
         user_response = json_response
-        expect(user_response[:email]).to eql @user_attributes[:email]
+        expect(user_response[:user][:email]).to eql @user_attributes[:email]
       end
 
       it { is_expected.to respond_with 201 }
@@ -62,7 +67,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
       it "should render the updated user as JSON" do
         user_response = json_response
-        expect(user_response[:email]).to eql 'new@mail.com'
+        expect(user_response[:user][:email]).to eql 'new@mail.com'
       end
 
       it { is_expected.to respond_with 200 }

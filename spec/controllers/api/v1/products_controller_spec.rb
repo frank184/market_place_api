@@ -4,19 +4,46 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
   before(:each) { include_default_accept_headers }
 
   describe "GET #index" do
-    before(:each) do
-      @n = 10
-      user = create :user
-      @n.times { create :product, user: user }
-      get :index
+    before(:each) { @n = 10 }
+
+    context "when no product_ids param" do
+      before(:each) do
+        user = create :user
+        @n.times { create :product, user: user }
+        get :index
+      end
+
+      it "should return #{@n} products JSON" do
+        products_response = json_response
+        expect(products_response[:products]).to have(@n).items
+      end
+
+      it "should embed the user in each product" do
+        products_response = json_response
+        products_response[:products].each do |product|
+          expect(product[:user]).to be_present
+        end
+      end
+
+      it { is_expected.to respond_with 200 }
     end
 
-    it "should return #{@n} products JSON" do
-      products_response = json_response
-      expect(products_response[:products]).to have(@n).items
-    end
+    context "when product_ids params present" do
+      before(:each) do
+        @user = create :user
+        @n.times { create :product, user: @user }
+        get :index, product_ids: @user.product_ids
+      end
 
-    it { is_expected.to respond_with 200 }
+      it "should return just the user's products" do
+        products_response = json_response[:products]
+        products_response.each do |product_response|
+          expect(product_response[:user][:email]).to eql @user.email
+        end
+      end
+
+      it { is_expected.to respond_with 200 }
+    end
   end
 
   describe "GET #show" do
@@ -27,7 +54,12 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
     it "should return a products JSON" do
       product_response = json_response
-      expect(product_response[:title]).to eql @product.title
+      expect(product_response[:product][:title]).to eql @product.title
+    end
+
+    it "should embed the user in the product" do
+      product_response = json_response
+      expect(product_response[:product])
     end
 
     it { is_expected.to respond_with 200 }
@@ -46,7 +78,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
       it "should return the created product as JSON" do
         product_response = json_response
-        expect(product_response[:title]).to eql @valid_attributes[:title]
+        expect(product_response[:product][:title]).to eql @valid_attributes[:title]
       end
 
       it { is_expected.to respond_with 201 }
@@ -86,7 +118,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
       it "should return the updated product as JSON" do
         product_response = json_response
-        expect(product_response[:title]).to eql "New Title"
+        expect(product_response[:product][:title]).to eql "New Title"
       end
 
       it { is_expected.to respond_with 200 }

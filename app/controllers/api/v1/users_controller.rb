@@ -9,7 +9,7 @@ class Api::V1::UsersController < ApplicationController
   def create
     user = User.new(permitted_user_params)
     if user.save
-      render json: user, status: 201, location: [:api, user]
+      respond_with user, status: 201, location: [:api, user]
     else
       render json: { errors: user.errors }, status: 422
     end
@@ -18,6 +18,8 @@ class Api::V1::UsersController < ApplicationController
   def update
     user = current_user
     if user.update(permitted_user_params)
+      # Default is to 204 - No Content
+      # respond_with user, status: 200, location: [:api, user]
       render json: user, status: 200, location: [:api, user]
     else
       render json: { errors: user.errors }, status: 422

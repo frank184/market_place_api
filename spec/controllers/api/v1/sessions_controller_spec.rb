@@ -15,7 +15,7 @@ RSpec.describe Api::V1::SessionsController, type: :controller do
 
       it "should return the user with credentials" do
         @user.reload
-        expect(json_response[:token]).to eql @user.token
+        expect(json_response[:user][:token]).to eql @user.token
       end
 
       it { is_expected.to respond_with 200 }
