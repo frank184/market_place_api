@@ -26,6 +26,8 @@ RSpec.describe LineItem, type: :model do
     subject { build :line_item, order: order, product: product }
 
     it { is_expected.to have_attributes(order: order) }
+    it { is_expected.to have_attributes(order_id: order.id) }
     it { is_expected.to have_attributes(product: product) }
+    it { is_expected.to have_attributes(product_id: product.id) }
   end
 end

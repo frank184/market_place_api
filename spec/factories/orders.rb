@@ -1,5 +1,5 @@
 FactoryGirl.define do
   factory :order do
-    total { Faker::Commerce.price }
+    total 0
   end
 end

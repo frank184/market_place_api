@@ -25,9 +25,9 @@ ActiveRecord::Schema.define(version: 20160722032656) do
 
   create_table "orders", force: :cascade do |t|
     t.integer  "user_id"
-    t.decimal  "total"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.decimal  "total",      default: 0.0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
   end
 
   add_index "orders", ["user_id"], name: "index_orders_on_user_id"
