@@ -3,7 +3,12 @@ class Api::V1::ProductsController < ApplicationController
   respond_to :json
 
   def index
-    respond_with Product.all
+    products = if params[:product_ids].present?
+      Product.where(id: params[:product_ids]).includes(:user)
+    else
+      Product.all.includes(:user)
+    end
+    respond_with products
   end
 
   def show
