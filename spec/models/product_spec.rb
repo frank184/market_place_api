@@ -1,9 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Product, type: :model do
-  before(:each) { @product = build(:product, title: 'title', price: 10.0) }
-  subject { @product }
-
+  
   describe "db" do
     context "columns" do
       it { is_expected.to have_db_column(:title).of_type(:string) }
@@ -14,6 +12,7 @@ RSpec.describe Product, type: :model do
   end
 
   describe "attributes" do
+    subject { build(:product, title: 'title', price: 10.0) }
     it { is_expected.to have_attributes(title: 'title') }
     it { is_expected.to have_attributes(price: 10.0) }
     it { is_expected.to have_attributes(published: false) }
