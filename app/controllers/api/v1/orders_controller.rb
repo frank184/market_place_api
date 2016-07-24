@@ -13,6 +13,7 @@ class Api::V1::OrdersController < ApplicationController
   def create
     order = current_user.orders.build(permitted_order_params)
     if order.save
+      OrdersMailer.create(order).deliver_later
       respond_with order, status: 201, location: [:api, :user, :orders]
     else
       render json: { errors: order.errors }, status: 422

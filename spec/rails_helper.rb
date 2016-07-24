@@ -9,6 +9,7 @@ require 'rspec/collection_matchers'
 
 # Require Support
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |file| require file }
+Dir[Rails.root.join("spec/helpers/**/*.rb")].each { |file| require file }
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -65,4 +66,6 @@ RSpec.configure do |config|
   config.include Devise::Test::ControllerHelpers, type: :view
   config.include Request::JsonHelpers, :type => :controller
   config.include Request::HeadersHelpers, :type => :controller
+  config.include EmailSpec::Helpers
+  config.include EmailSpec::Matchers
 end
