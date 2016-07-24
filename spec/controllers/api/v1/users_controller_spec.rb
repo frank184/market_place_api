@@ -23,6 +23,10 @@ RSpec.describe Api::V1::UsersController, type: :controller do
       expect(user_response[:product_ids]).to eql []
     end
 
+    it "should exclude user token" do
+      expect(user_response[:token]).to be_falsey
+    end
+
     it { is_expected.to respond_with 200 }
   end
 

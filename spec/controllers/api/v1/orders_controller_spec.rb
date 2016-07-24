@@ -29,7 +29,8 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
 
   describe "GET #show" do
     before(:each) do
-      @order = create :order, user: user
+      @product = create :product, price: 10.0, user: user
+      @order = create :order, user: user, product_ids: [@product.id]
       get :show, user_id: user.id, id: @order.id
     end
 
@@ -44,7 +45,23 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
     end
 
     it "should have empty product_ids" do
-      expect(order_response[:product_ids]).to eql []
+      expect(order_response[:product_ids]).to eql [@product.id]
+    end
+
+    it "should include the order's total" do
+      expect(order_response[:total].to_f).to eq @product.price
+    end
+
+    it "should include order's products" do
+      expect(order_response).to have_key(:products)
+    end
+
+    it "should have one product in products" do
+      expect(order_response[:products]).to have(1).items
+    end
+
+    it "should have the correct order products" do
+      order_response[:products].each {|product| expect(product[:id]).to eq @product.id}
     end
 
     it { is_expected.to respond_with 200 }
@@ -62,7 +79,7 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
       it "should return the create order as JSON" do
         expect(order_response[:id]).to be_present
         expect(order_response[:user][:id]).to eql user.id
-        expect(order_response[:total].to_f).to eq 20
+        expect(order_response[:total].to_f).to eq (product1.price + product2.price)
         expect(order_response[:product_ids]).to match_array [product1.id, product2.id]
       end
 

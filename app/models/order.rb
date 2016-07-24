@@ -8,7 +8,7 @@ class Order < ActiveRecord::Base
   # validates_presence_of :total
   # validates_numericality_of :total, greater_than_or_equal_to: 0
 
-  after_save :generate_total
+  before_validation :generate_total
 
   def generate_total
     self.total = products.map(&:price).sum
