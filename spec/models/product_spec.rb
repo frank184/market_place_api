@@ -8,6 +8,7 @@ RSpec.describe Product, type: :model do
       it { is_expected.to have_db_column(:price).of_type(:decimal) }
       it { is_expected.to have_db_column(:published).of_type(:boolean) }
       it { is_expected.to have_db_column(:user_id).of_type(:integer) }
+      it { is_expected.to have_db_column(:quantity).of_type(:integer) }
     end
   end
 
@@ -17,11 +18,12 @@ RSpec.describe Product, type: :model do
   end
 
   describe "attributes" do
-    subject { build(:product, title: 'title', price: 10.0) }
+    subject { build(:product, title: 'title', price: 10.0, quantity: 5) }
     it { is_expected.to have_attributes(title: 'title') }
     it { is_expected.to have_attributes(price: 10.0) }
     it { is_expected.to have_attributes(published: false) }
     it { is_expected.to have_attributes(user_id: nil) }
+    it { is_expected.to have_attributes(quantity: 5) }
   end
 
   describe "associations" do
