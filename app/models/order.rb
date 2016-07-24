@@ -17,7 +17,11 @@ class Order < ActiveRecord::Base
   def product_ids_quantities=(product_ids_quantities)
     product_ids_quantities.each do |product_id_quantity|
       product_id, quantity = product_id_quantity
-      line_items.build(product_id: product_id)
+      line_items.build(product_id: product_id, quantity: quantity)
     end
+  end
+
+  def product_ids_quantities
+    line_items.map{|line_item| [line_item.product_id, line_item.quantity]}
   end
 end

@@ -60,14 +60,29 @@ RSpec.describe Order, type: :model do
       end
     end
 
-    describe "#product_ids_quantities" do
+    describe "#product_ids_quantities=" do
       let(:user) { create :user }
       let(:product1) { create :product, user: user, price: 10.0 }
       let(:product2) { create :product, user: user, price: 10.0 }
       before(:each) { @order = build :order, user: user }
 
       it "should build 2 line_items for the order" do
-        expect{@order.product_ids_quantities([[product1.id, 2], [product2.id, 3]])}.to change{@order.line_items.size}.from(0).to(2)
+        expect{@order.product_ids_quantities = [[product1.id, 2], [product2.id, 3]]}.to change{@order.line_items.size}.from(0).to(2)
+      end
+    end
+
+    describe "#product_ids_quantities" do
+      let(:user) { create :user }
+      let(:product1) { create :product, user: user, price: 10.0 }
+      let(:product2) { create :product, user: user, price: 10.0 }
+      before(:each) do
+        @order = build :order, user: user
+        @order.product_ids_quantities = [[product1.id, 2], [product2.id, 3]]
+        @match = @order.product_ids_quantities
+      end
+
+      it "should have matching line_items" do
+        expect(@match).to match_array [[product1.id, 2], [product2.id, 3]]
       end
     end
   end

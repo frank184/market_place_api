@@ -6,6 +6,7 @@ RSpec.describe LineItem, type: :model do
     context "columns" do
       it { is_expected.to have_db_column(:order_id) }
       it { is_expected.to have_db_column(:product_id) }
+      it { is_expected.to have_db_column(:quantity) }
     end
   end
 
@@ -23,11 +24,13 @@ RSpec.describe LineItem, type: :model do
     let(:user) { create :user }
     let(:order) { create :order, user: user }
     let(:product) { create :product, user: user }
-    subject { build :line_item, order: order, product: product }
+    subject { build :line_item, order: order, product: product, quantity: 5 }
 
     it { is_expected.to have_attributes(order: order) }
     it { is_expected.to have_attributes(order_id: order.id) }
     it { is_expected.to have_attributes(product: product) }
     it { is_expected.to have_attributes(product_id: product.id) }
+    it { is_expected.to have_attributes(product_id: product.id) }
+    it { is_expected.to have_attributes(quantity: 5) }
   end
 end
