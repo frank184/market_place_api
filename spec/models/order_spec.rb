@@ -32,12 +32,15 @@ RSpec.describe Order, type: :model do
 
   describe "callbacks" do
     describe "before_validation" do
-      before(:each) do
+      describe "#generate_total" do
+        let(:user) { create :user }
+        let(:product1) { create :product, price: 10.0, user: user }
+        let(:product2) { create :product, price: 10.0, user: user }
+        before(:each) { @order = create :order, user: user, product_ids: [product1.id, product2.id] }
 
-      end
-
-      it "should call #generate_total" do
-
+        it "should generate the order's total from products" do
+          expect(@order.total).to eq 20.0
+        end
       end
     end
   end
@@ -45,12 +48,26 @@ RSpec.describe Order, type: :model do
   describe "methods" do
     describe "#generate_total" do
       let(:user) { create :user }
-      let(:product1) { create :product, price: 10.0, user: user }
-      let(:product2) { create :product, price: 10.0, user: user }
-      before(:each) { @order = create :order, user: user, product_ids: [product1.id, product2.id] }
+      let(:product1) { create :product, user: user, price: 10.0 }
+      let(:product2) { create :product, user: user, price: 10.0 }
+      before(:each) do
+        @order = build :order, user: user, product_ids: [product1.id, product2.id]
+        @order.generate_total
+      end
 
-      it "should generate the order's total from products" do
-        expect(@order.total).to eq 20.0
+      it "should sum the products and set the total" do
+        expect(@order.total).to eq 20
+      end
+    end
+
+    describe "#product_ids_quantities" do
+      let(:user) { create :user }
+      let(:product1) { create :product, user: user, price: 10.0 }
+      let(:product2) { create :product, user: user, price: 10.0 }
+      before(:each) { @order = build :order, user: user }
+
+      it "should build 2 line_items for the order" do
+        expect{@order.product_ids_quantities([[product1.id, 2], [product2.id, 3]])}.to change{@order.line_items.size}.from(0).to(2)
       end
     end
   end

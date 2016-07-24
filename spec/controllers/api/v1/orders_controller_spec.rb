@@ -71,7 +71,7 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
     context "when valid attributes" do
       let(:product1) { create :product, user: user, price: 10.0 }
       let(:product2) { create :product, user: user, price: 10.0 }
-      let(:order_params) { {product_ids: [product1.id, product2.id]} }
+      let(:order_params) { {product_ids_quantities: [[product1.id, 2], [product2.id, 3]]} }
       before(:each) { post :create, {user_id: user.id, order: order_params} }
 
       let(:order_response) { json_response[:order] }
@@ -86,37 +86,39 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
       it { is_expected.to respond_with 201 }
     end
 
-    context "when invalid attributes" do
-      # context "total is missing" do
-      #   before(:each) { post :create, {user_id: user.id, order: {total: nil}} }
-      #   let(:order_response) { json_response }
-      #
-      #   it "should return an errors JSON" do
-      #     expect(order_response).to have_key(:errors)
-      #   end
-      #
-      #   it "should explain what went wrong" do
-      #     expect(order_response[:errors]).to include user: ["can't be blank"]
-      #   end
-      #
-      #   it { is_expected.to respond_with 422 }
-      # end
-      #
-      # context "total is negative" do
-      #   before(:each) { post :create, {user_id: user.id, order: {total: -1}} }
-      #   let(:order_response) { json_response }
-      #
-      #   it "should return an errors JSON" do
-      #     expect(order_response).to have_key(:errors)
-      #   end
-      #
-      #   it "should explain what went wrong" do
-      #     expect(order_response[:errors]).to include total: ["must be greater than or equal to 0"]
-      #   end
-      #
-      #   it { is_expected.to respond_with 422 }
-      # end
-    end
+    # Invalid since we're setting the user and total ourselves
+    #
+    # context "when invalid attributes" do
+    #   context "total is missing" do
+    #     before(:each) { post :create, {user_id: user.id, order: {total: nil}} }
+    #     let(:order_response) { json_response }
+    #
+    #     it "should return an errors JSON" do
+    #       expect(order_response).to have_key(:errors)
+    #     end
+    #
+    #     it "should explain what went wrong" do
+    #       expect(order_response[:errors]).to include user: ["can't be blank"]
+    #     end
+    #
+    #     it { is_expected.to respond_with 422 }
+    #   end
+    #
+    #   context "total is negative" do
+    #     before(:each) { post :create, {user_id: user.id, order: {total: -1}} }
+    #     let(:order_response) { json_response }
+    #
+    #     it "should return an errors JSON" do
+    #       expect(order_response).to have_key(:errors)
+    #     end
+    #
+    #     it "should explain what went wrong" do
+    #       expect(order_response[:errors]).to include total: ["must be greater than or equal to 0"]
+    #     end
+    #
+    #     it { is_expected.to respond_with 422 }
+    #   end
+    # end
   end
 
 end

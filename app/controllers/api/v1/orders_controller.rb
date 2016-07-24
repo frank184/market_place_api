@@ -11,17 +11,14 @@ class Api::V1::OrdersController < ApplicationController
   end
 
   def create
-    order = current_user.orders.build(permitted_order_params)
+    order = current_user.orders.build
+    order.product_ids_quantities = params[:order][:product_ids_quantities]
     if order.save
+      order.reload
       OrdersMailer.create(order).deliver_later
       respond_with order, status: 201, location: [:api, :user, :orders]
     else
       render json: { errors: order.errors }, status: 422
     end
   end
-
-  private
-    def permitted_order_params
-      params.require(:order).permit(:product_ids => [])
-    end
 end

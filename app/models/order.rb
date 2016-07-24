@@ -11,6 +11,13 @@ class Order < ActiveRecord::Base
   before_validation :generate_total
 
   def generate_total
-    self.total = products.map(&:price).sum
+    self.total = line_items.map{|line_item| line_item.product.price}.sum
+  end
+
+  def product_ids_quantities=(product_ids_quantities)
+    product_ids_quantities.each do |product_id_quantity|
+      product_id, quantity = product_id_quantity
+      line_items.build(product_id: product_id)
+    end
   end
 end
