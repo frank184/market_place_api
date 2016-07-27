@@ -1,6 +1,9 @@
 class Product < ActiveRecord::Base
   belongs_to :user
 
+  has_many :line_items
+  has_many :orders, through: :line_items
+
   validates_presence_of :title, :price, :user
   validates_numericality_of :price, greater_than_or_equal_to: 0
 
@@ -8,7 +11,6 @@ class Product < ActiveRecord::Base
   scope :greater_than_or_equal_price, ->(price) { where 'price >= ?', price }
   scope :less_than_or_equal_price, ->(price) { where 'price <= ?', price }
   scope :latest, -> { order :updated_at }
-
 
   def self.search(params={})
     products = params[:product_ids].present? ? Product.find(params[:product_ids]) : Product.all
@@ -18,4 +20,13 @@ class Product < ActiveRecord::Base
     products = products.latest if params[:latest].present? && params[:latest] == true
     products
   end
+
+  def quantity_in_words
+    if quantity > 0
+      "only #{quantity} left"
+    else
+      "none left"
+    end << " in stock"
+  end
+
 end

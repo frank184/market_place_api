@@ -9,7 +9,7 @@ class Api::V1::SessionsController < ApplicationController
       sign_in(user)
       user.regenerate_token
       user.save
-      respond_with user, status: 200, location: [:api, user]
+      respond_with user, serializer: SessionUserSerializer, status: 200, location: [:api, user]
     else
       render json: { errors: "Invalid email or password" }, status: 422
     end
@@ -17,8 +17,9 @@ class Api::V1::SessionsController < ApplicationController
 
   def destroy
     user = User.find_by(token: params[:id])
+    # has_secure_token saves on regenerate_token
     user.regenerate_token
-    user.save
+    # user.save
     head 204
   end
 end

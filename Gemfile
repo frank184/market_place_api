@@ -50,6 +50,7 @@ group :test do
   gem 'rspec-rails'
   gem 'rspec-collection_matchers'
   gem 'shoulda-matchers'
+  gem 'email_spec'
 end
 
 # Api gems
