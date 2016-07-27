@@ -60,11 +60,8 @@ RSpec.describe User, type: :model do
 
   describe "methods" do
     describe "#regenerate_token" do
-      before(:each) do
-        @user = build :user, token: 'token'
-        @user.regenerate_token
-      end
-
+      let(:user) { build :user, token: 'token' }
+      before(:each) { user.regenerate_token }
       it { expect(@user.token).to_not eql 'token' }
     end
   end

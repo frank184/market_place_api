@@ -1,6 +1,6 @@
 class Product < ActiveRecord::Base
   belongs_to :user
-  
+
   has_many :line_items
   has_many :orders, through: :line_items
 
@@ -12,7 +12,6 @@ class Product < ActiveRecord::Base
   scope :less_than_or_equal_price, ->(price) { where 'price <= ?', price }
   scope :latest, -> { order :updated_at }
 
-
   def self.search(params={})
     products = params[:product_ids].present? ? Product.find(params[:product_ids]) : Product.all
     products = products.by_title(params[:title]) if params[:title]
@@ -21,4 +20,13 @@ class Product < ActiveRecord::Base
     products = products.latest if params[:latest].present? && params[:latest] == true
     products
   end
+
+  def quantity_in_words
+    if quantity > 0
+      "only #{quantity} left"
+    else
+      "none left"
+    end << " in stock"
+  end
+
 end

@@ -28,6 +28,58 @@ RSpec.describe Order, type: :model do
     it { is_expected.to validate_presence_of(:user) }
     # it { is_expected.to validate_presence_of(:total) }
     # it { is_expected.to validate_numericality_of(:total).is_greater_than_or_equal_to(0) }
+    describe "custom validation" do
+      context "enough products" do
+        let(:user) { create :user }
+        let(:order) { build :order, user: user }
+
+        context "when unsufficient products in stock" do
+          let(:product1) { create :product, title: 'TV', user: user, price: 100, quantity: 5 }
+          let(:product2) { create :product, title: 'Gameboy', user: user, price: 85, quantity: 10 }
+          before(:each) do
+            order.product_ids_quantities = [[product1.id, 10], [product2.id, 15]]
+            order.save
+          end
+
+          it "should be invalid" do
+            expect(order).to_not be_valid
+          end
+
+          it "should have an error on tv and gamboy" do
+            expect(order).to have(1).errors_on(:tv)
+            expect(order).to have(1).errors_on(:gameboy)
+          end
+
+          it "should explain why these are invalid" do
+            expect(order.errors[:tv]).to include "is out of stock, only 5 left in stock"
+            expect(order.errors[:gameboy]).to include "is out of stock, only 10 left in stock"
+          end
+        end
+
+        context "when no products left" do
+          let(:product1) { create :product, title: 'TV', user: user, price: 100, quantity: 0 }
+          let(:product2) { create :product, title: 'Gameboy', user: user, price: 85, quantity: 0 }
+          before(:each) do
+            order.product_ids_quantities = [[product1.id, 10], [product2.id, 15]]
+            order.save
+          end
+
+          it "should be invalid" do
+            expect(order).to_not be_valid
+          end
+
+          it "should have an error on tv and gamboy" do
+            expect(order).to have(1).errors_on(:tv)
+            expect(order).to have(1).errors_on(:gameboy)
+          end
+
+          it "should explain why it is invalid" do
+            expect(order.errors[:tv]).to include "is out of stock, none left in stock"
+            expect(order.errors[:gameboy]).to include "is out of stock, none left in stock"
+          end
+        end
+      end
+    end
   end
 
   describe "callbacks" do
