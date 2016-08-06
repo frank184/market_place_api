@@ -13,7 +13,7 @@ class Product < ActiveRecord::Base
   scope :latest, -> { order :updated_at }
 
   def self.search(params={})
-    products = params[:product_ids].present? ? Product.find(params[:product_ids]) : Product.all
+    products = params[:product_ids] ? Product.where(id: params[:product_ids]) : Product.all
     products = products.by_title(params[:title]) if params[:title]
     products = products.greater_than_or_equal_price(params[:min_price].to_f) if params[:min_price]
     products = products.less_than_or_equal_price(params[:max_price].to_f) if params[:max_price]

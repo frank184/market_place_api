@@ -7,12 +7,15 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
   describe "GET #index" do
     context "when no product_ids param" do
+      let(:products_response) { json_response[:products] }
+      let(:meta) { json_response[:meta] }
+
       before(:each) do
         5.times { create :product, user: user }
         get :index
       end
 
-      let(:products_response) { json_response[:products] }
+      it { expect(json_response).to have_key(:products) }
 
       it "should return 5 products JSON" do
         expect(products_response).to have(5).items
@@ -21,6 +24,8 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
       it "should embed the user in each product" do
         products_response.each { |product| expect(product[:user]).to be_present }
       end
+
+      it_behaves_like "paginated list"
 
       it { is_expected.to respond_with 200 }
     end

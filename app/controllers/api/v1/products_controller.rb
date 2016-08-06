@@ -3,7 +3,8 @@ class Api::V1::ProductsController < ApplicationController
   respond_to :json
 
   def index
-    respond_with Product.search(params)
+    products = Product.search(params).page(params[:page]).per(params[:per_page])
+    respond_with products, meta: paginate(resource: products, per_page: params[:per_page])
   end
 
   def show
@@ -38,6 +39,6 @@ class Api::V1::ProductsController < ApplicationController
 
   private
     def permitted_product_params
-      params.require(:product).permit(:title, :price, :published)
+      params.require(:product).permit(:title, :price, :published) rescue {}
     end
 end
