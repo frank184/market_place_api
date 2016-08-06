@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'pp'
+
 RSpec.describe Api::V1::ProductsController, type: :controller do
   before(:each) { include_default_accept_headers }
   let(:user) { create(:user) }
@@ -7,12 +7,15 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
 
   describe "GET #index" do
     context "when no product_ids param" do
+      let(:products_response) { json_response[:products] }
+      let(:meta) { json_response[:meta] }
+
       before(:each) do
         5.times { create :product, user: user }
         get :index
       end
 
-      let(:products_response) { json_response[:products] }
+      it { expect(json_response).to have_key(:products) }
 
       it "should return 5 products JSON" do
         expect(products_response).to have(5).items
@@ -23,10 +26,10 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
       end
 
       it { expect(json_response).to have_key(:meta) }
-      it { expect(json_response[:meta]).to have_key(:pagination) }
-      it { expect(json_response[:meta][:pagination]).to have_key(:per_page) }
-      it { expect(json_response[:meta][:pagination]).to have_key(:total_pages) }
-      it { expect(json_response[:meta][:pagination]).to have_key(:total_objects) }
+      it { expect(meta).to have_key(:pagination) }
+      it { expect(meta[:pagination]).to have_key(:per_page) }
+      it { expect(meta[:pagination]).to have_key(:total_pages) }
+      it { expect(meta[:pagination]).to have_key(:total_objects) }
 
       it { is_expected.to respond_with 200 }
     end

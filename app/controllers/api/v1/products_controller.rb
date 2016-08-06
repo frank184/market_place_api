@@ -45,6 +45,6 @@ class Api::V1::ProductsController < ApplicationController
 
   private
     def permitted_product_params
-      params.require(:product).permit(:title, :price, :published)
+      params.require(:product).permit(:title, :price, :published) rescue {}
     end
 end
