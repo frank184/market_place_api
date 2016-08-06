@@ -16,7 +16,7 @@ class Api::V1::OrdersController < ApplicationController
     order.product_ids_quantities = params[:order][:product_ids_quantities]
     if order.save
       order.reload
-      OrdersMailer.create(order).deliver_later
+      OrdersMailer.delay.create(order)
       respond_with order, status: 201, location: [:api, :user, :orders]
     else
       render json: { errors: order.errors }, status: 422
