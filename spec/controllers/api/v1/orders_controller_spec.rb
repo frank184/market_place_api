@@ -69,8 +69,8 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
 
   describe "POST #create" do
     context "when valid attributes" do
-      let(:product1) { create :product, user: user, price: 10.0 }
-      let(:product2) { create :product, user: user, price: 10.0 }
+      let(:product1) { create :product, user: user, price: 10.0, quantity: 10 }
+      let(:product2) { create :product, user: user, price: 10.0, quantity: 10 }
       let(:order_params) { {product_ids_quantities: [[product1.id, 2], [product2.id, 3]]} }
       before(:each) { post :create, {user_id: user.id, order: order_params} }
 
@@ -81,6 +81,8 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
         expect(order_response[:user][:id]).to eql user.id
         expect(order_response[:total].to_f).to eq (product1.price + product2.price)
         expect(order_response[:product_ids]).to match_array [product1.id, product2.id]
+        expect(product1.reload.quantity).to eq 8
+        expect(product2.reload.quantity).to eq 7
       end
 
       it { is_expected.to respond_with 201 }

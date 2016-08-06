@@ -67,3 +67,4 @@ gem 'devise'
 # gem 'simple_form'
 
 gem 'has_secure_token'
+gem 'kaminari'
