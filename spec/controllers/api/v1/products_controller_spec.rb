@@ -25,11 +25,7 @@ RSpec.describe Api::V1::ProductsController, type: :controller do
         products_response.each { |product| expect(product[:user]).to be_present }
       end
 
-      it { expect(json_response).to have_key(:meta) }
-      it { expect(meta).to have_key(:pagination) }
-      it { expect(meta[:pagination]).to have_key(:per_page) }
-      it { expect(meta[:pagination]).to have_key(:total_pages) }
-      it { expect(meta[:pagination]).to have_key(:total_objects) }
+      it_behaves_like "paginated list"
 
       it { is_expected.to respond_with 200 }
     end

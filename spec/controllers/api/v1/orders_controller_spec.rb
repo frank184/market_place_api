@@ -27,11 +27,7 @@ RSpec.describe Api::V1::OrdersController, type: :controller do
       orders_response.each {|order| expect(order[:total].to_f).to eq 0.0}
     end
 
-    it { expect(json_response).to have_key(:meta) }
-    it { expect(meta).to have_key(:pagination) }
-    it { expect(meta[:pagination]).to have_key(:per_page) }
-    it { expect(meta[:pagination]).to have_key(:total_pages) }
-    it { expect(meta[:pagination]).to have_key(:total_objects) }
+    it_behaves_like "paginated list"
 
     it { is_expected.to respond_with 200 }
   end
