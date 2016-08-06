@@ -68,3 +68,5 @@ gem 'devise'
 
 gem 'has_secure_token'
 gem 'kaminari'
+gem 'delayed_job_active_record'
+gem 'daemons'
